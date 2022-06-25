@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+* 使用indexof方法实现模糊查询
+* @param  {Array}  list     进行查询的数组
+* @param  {String} keyWord  查询的关键词
+* @return {Array}           查询的结果
+*/
+
+    let myobj = [{ "id": 3, "date": "2016-05-01", "name": "何广智2", "viewersVote": "8", "club": "山羊", "audio": "hhhh", "remark": "暂无" }, { "id": "qK03MjdIx2ZIXQ677Kle5", "date": "2022-04-04", "name": "测试2", "viewersVote": "", "club": "", "audio": "", "remark": "" }, { "id": "qK03MjdIx2ZIXQ677Kle5", "date": "2022-04-04", "name": "测试3", "viewersVote": "", "club": "", "audio": "", "remark": "" }]
+
+    // var myobj = eval(t2);
+
+    function fuzzyQuery(list, keyWord) {
+      // 大数组
+      let arr = []
+      // 把数组里的 name 抽出来放到单个数组里，然后把小数组 push 到大数组里
+      for (var i = 0; i < myobj.length; i++) {
+        console.log(myobj[i], '每一项');
+        let abc = []
+        abc[i] = myobj[i].name + myobj[i].club
+        console.log(abc, 'abccccccccccc');
+        let test = abc.filter(item => item)
+        arr.push(test)
+      }
+
+      // 存放找到的数组
+      let smallArr = []
+      let newTest = arr.map(item => {
+        // item是单个数组，先保存一下
+        let sitem = item
+        
+        // 小数组 -- 分割每一个字符串
+        let str = item[0]
+        let newStr = str.split('')
+        item = newStr
+        // console.log(item, 'item');
+        
+        // 关键字 - 分割
+        let kw = keyWord
+        let newKw = keyWord.split('')
+
+        newKw.forEach(kwitem => {
+          // 拿到单个关键字，去找
+          if(item.indexOf(kwitem) != -1){
+            smallArr.push(sitem)
+            console.log(sitem, '小数组');
+          }else{
+            console.log('没找到');
+          }
+        });
+
+      })
+
+      let uniqarr = [...new Set(smallArr)]
+
+      console.log(uniqarr, '新数组');
+      console.log(arr, '大数组');
+
+    }
+
+    fuzzyQuery(myobj, '山羊')
+
+    /* var str = "你 好啊 ！";
+
+    var aa = str.split(" ");
+    console.log(aa, 'aaaaaaaaaaaaaaaa');
+
+    var bb = str.split("");
+    console.log(bb); */
+  </script>
+</body>
+
+</html>
