@@ -8,6 +8,8 @@ import store from './store'
 import '@/assets/fonts/iconfont.css'
 // 引入全局css样式
 import '@/assets/style/global.less'
+// 引入 lib-flexible
+import 'lib-flexible/flexible.js'
 
 Vue.use(ElementUI)
 

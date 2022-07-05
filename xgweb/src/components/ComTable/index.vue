@@ -27,9 +27,9 @@
       class="pager"
       layout="prev, pager, next"
       :total="config.total"
-      :page-size="10"
+      :page-size="config.pagesize"
       @current-change="changePage"
-      :current-page.sync="config.page"
+      :current-page.sync="config.pagenum"
     >
     </el-pagination>
   </div>
@@ -66,11 +66,5 @@ export default {
   background-color: #fff;
   position: relative;
 
-  .pager {
-    /* position: absolute;
-    bottom: 0;
-    right: 20px; */
-    // height: 90%;
-  }
 }
 </style>

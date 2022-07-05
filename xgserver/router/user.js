@@ -3,10 +3,12 @@ const express = require('express')
 // 创建路由对象
 const router = express.Router()
 // 导入用户信息的处理函数模块
-const login_handler = require('../router_handler/login')
+const login_handler = require('../router_handler/user')
 
-// 获取用户的基本信息
-router.post('/login', login_handler.getUserList)
+// 注册
+router.post('/reguser', login_handler.reguser)
+// 登录
+router.post('/login', login_handler.login)
 
 // 向外共享路由对象
 module.exports = router

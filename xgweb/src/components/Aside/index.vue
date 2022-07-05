@@ -2,7 +2,7 @@
   <el-row class="tac">
     <el-col :span="24">
       <el-menu
-        :default-active="activePath ? activePath : '/club'"
+        :default-active="activePath ? activePath : '/home'"
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
@@ -14,6 +14,17 @@
         router
       >
         <div class="toggle-button" @click="toggleCollapse">|||</div>
+        <!-- 只有一级菜单 -->
+        <el-menu-item
+          :index="'/' + item.path"
+          v-for="item in menuListOnly"
+          :key="item.id"
+          v-show="item.children.length == 0"
+          @click="saveNavState('/' + item.path)"
+        >
+          <i :class="iconsObj[item.id]"></i>
+          <span slot="title">{{ item.authName }}</span>
+        </el-menu-item>
         <!-- 一级菜单组 -->
         <el-submenu
           :index="item.id + ''"
@@ -38,17 +49,7 @@
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <!-- 只有一级菜单 -->
-        <el-menu-item
-          :index="'/' + item.path"
-          v-for="item in menuListOnly"
-          :key="item.id"
-          v-show="item.children.length == 0"
-          @click="saveNavState('/' + item.path)"
-        >
-          <i :class="iconsObj[item.id]"></i>
-          <span slot="title">{{ item.authName }}</span>
-        </el-menu-item>
+
       </el-menu>
     </el-col>
   </el-row>

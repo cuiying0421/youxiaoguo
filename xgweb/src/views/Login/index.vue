@@ -28,13 +28,14 @@
 
 <script>
 import { loginAPI } from '@/api'
+import { setToken } from '@/utils/token.js'
 export default {
   data () {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        username: 'admin',
-        password: '123456'
+        username: '',
+        password: ''
       }
     }
   },
@@ -45,9 +46,10 @@ export default {
     // 登录
     async login () {
       const res = await loginAPI(this.loginForm)
-      console.log(res.data.data[0].token)
-      window.sessionStorage.setItem('token', res.data.data[0].token)
-      this.$router.push('/club')
+      console.log(res.data.token)
+      setToken(res.data.token)
+      // window.sessionStorage.setItem('token', res.data.data[0].token)
+      this.$router.push('/home')
     },
     // 重置表单
     resetLoginForm (formName) {

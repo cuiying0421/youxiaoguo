@@ -52,6 +52,8 @@ export default {
 .el-main {
   // padding-top: 0;
   width: calc(100% - 200px);
+  // height: 100vh;
+  // background-color: green;
   padding: 20px;
   position: absolute;
   top: 60px;

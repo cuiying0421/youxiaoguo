@@ -51,7 +51,7 @@
         ></ComForm>
       </div>
       <div slot="footer">
-        <el-button @click="isShow = false">取 消2</el-button>
+        <el-button @click="isShow = false">取 消</el-button>
         <el-button type="primary" @click="confirm">确 定</el-button>
       </div>
     </el-dialog>
@@ -72,13 +72,17 @@ export default {
     return {
       operateType: 'add',
       isShow: false,
-      // 搜索
-      queryInfo: {
-        query: '',
+      // 分页
+      config: {
         // 当前的页数
         pagenum: 1,
         // 当前每页显示多少条
-        pagesize: 2
+        pagesize: 3,
+        total: 30
+      },
+      // 搜索
+      queryInfo: {
+        query: ''
       },
       // 列表数据
       tableData: [
@@ -112,7 +116,7 @@ export default {
         },
         {
           prop: 'video',
-          label: '录音'
+          label: '视频'
         },
         {
           prop: 'remark',
@@ -157,7 +161,7 @@ export default {
         },
         {
           model: 'video',
-          label: '录音',
+          label: '视频',
           type: 'input'
         },
         {
@@ -165,20 +169,22 @@ export default {
           label: '备注',
           type: 'input'
         }
-      ],
-      // 分页
-      config: {
-        page: 1,
-        total: 30
-      }
+      ]
+
     }
   },
   methods: {
     async getList () {
-      console.log(typeof this.queryInfo.query, '1111111111')
-      const res = await getClubAPI(this.queryInfo)
+      // console.log(typeof this.queryInfo.query, '1111111111')
+      const params = {
+        query: this.queryInfo.query,
+        pagenum: this.config.pagenum,
+        pagesize: this.config.pagesize
+      }
+      const res = await getClubAPI(params)
       console.log(res, '开放麦数据列表')
       this.tableData = res.data.data
+      this.config.total = res.data.total
     },
     // 确定按钮
     async confirm () {
@@ -189,8 +195,9 @@ export default {
         console.log(res, '编辑开放麦')
       } else if (this.operateType === 'add') {
         this.isShow = false
+        console.log(this.operateForm, 'this.operateForm')
         const res = await addClubAPI(this.operateForm)
-        console.log(res, 'this.operateForm')
+        console.log(res, 'ressss')
         this.getList()
       }
     },
@@ -229,5 +236,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+
 </style>

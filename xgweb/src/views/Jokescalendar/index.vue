@@ -16,8 +16,9 @@
             placeholder="请输入内容"
             v-model="queryInfo.query"
             clearable
+            @clear="getList"
           >
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="getList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -50,14 +51,14 @@
       </div>
       <div slot="footer">
         <el-button @click="isShow = false">取 消</el-button>
-        <el-button type="primary" @click="isShow = false">确 定</el-button>
+        <el-button type="primary" @click="confirm">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getJokescalAPI } from '@/api'
+import { getJokescalAPI, addJokescalAPI, editJokescalAPI, delJokescalAPI } from '@/api'
 import ComTable from '@/components/ComTable/index.vue'
 import ComForm from '@/components/ComForm/index.vue'
 
@@ -71,13 +72,17 @@ export default {
     return {
       operateType: 'add',
       isShow: false,
-      // 搜索
-      queryInfo: {
-        query: '',
+      // 分页
+      config: {
         // 当前的页数
         pagenum: 1,
         // 当前每页显示多少条
-        pagesize: 5
+        pagesize: 3,
+        total: 30
+      },
+      // 搜索
+      queryInfo: {
+        query: ''
       },
       // 列表数据
       tableData: [
@@ -116,47 +121,78 @@ export default {
       },
       operateFormLabel: [
         {
+          model: 'date',
           label: '日期',
           type: 'date'
         },
         {
+          model: 'name',
           label: '评审员',
           type: 'input'
         },
         {
+          model: 'contribute',
           label: '投稿',
           type: 'input'
         },
         {
+          model: 'bgking',
           label: '爆梗王',
           type: 'input'
         }
-      ],
-      // 分页
-      config: {
-        page: 1,
-        total: 30
-      }
+      ]
     }
   },
   methods: {
     async getList () {
-      const res = await getJokescalAPI()
+      const params = {
+        query: this.queryInfo.query,
+        pagenum: this.config.pagenum,
+        pagesize: this.config.pagesize
+      }
+      const res = await getJokescalAPI(params)
       console.log(res, '段子日历数据')
       this.tableData = res.data.data
+      this.config.total = res.data.total
+    },
+    // 确定按钮
+    async confirm () {
+      if (this.operateType === 'edit') {
+        const res = await editJokescalAPI(this.operateForm)
+        this.isShow = false
+        this.getList()
+        console.log(res, '编辑开放麦')
+        console.log(this.operateForm, 'this.operateForm')
+      } else if (this.operateType === 'add') {
+        this.isShow = false
+        console.log(this.operateForm, 'this.operateForm')
+        const res = await addJokescalAPI(this.operateForm)
+        console.log(res, 'ressss')
+        this.getList()
+      }
     },
     // 增加
     addJokescalendar () {
       this.isShow = true
+      this.operateType = 'add'
+      this.operateForm = {
+        date: '',
+        name: '',
+        contribute: '',
+        bgking: ''
+      }
     },
     // 编辑
     editJokescalendar (row) {
-      this.operateType = ''
+      this.operateType = 'edit'
       this.isShow = true
+      this.operateForm = row
       console.log(row.id, '编辑的id')
     },
     // 删除
-    delJokescalendar (row) {
+    async delJokescalendar (row) {
+      await delJokescalAPI(row.id)
+      this.getList()
       console.log(row.id, '删除的id')
     }
   },
